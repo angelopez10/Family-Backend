@@ -21,6 +21,7 @@ flask-jwt-extended = "*"
 flask-script = "*"
 flask-bcrypt = "*"
 flask-mail = "*"
+randint = "*"
 
 [requires]
 python_version = "3.7"

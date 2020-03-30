@@ -31,33 +31,37 @@ def sitemap():
     return generate_sitemap(app)
 
 @app.route('/member', methods=['GET', 'POST'])
+@app.route('/member/<int:id>', methods=['GET', 'DELETE', 'PUT'])
+
 def person_group():
 
     if request.method == 'GET':
-        respuesta_body = {
-            "famili_luck_number":myFamily.concat(),
-             "members": myFamily.get_all_members(),
-            "Sum_lucky_num":myFamily.sum()
-        }
+        if id is not None:
+            member = myFamily.get_member(id)
+            if member: 
+                return jsonify(member), 200
+            else:
+                return ({'msg': 'Member Not Found'}), 404
+        else:
+            members = myFamily.get_all_members()
 
-        return jsonify(respuesta_body), 200
+        return jsonify(members), 200
 
 
     if request.method == 'POST':
-        body = request.get_json()
-        respuesta = myFamily.add_member(body)
-        return jsonify(respuesta), 200
+        member = request.get_json()
+        member = myFamily.add_member(member)
+        return jsonify(member), 200
 
-@app.route('/member/<int:member_id>', methods=['DELETE', 'PUT'])
-def person(member_id):
+
     if request.method == 'DELETE':
-        respuesta = myFamily.delete_member(member_id)
-        return jsonify(respuesta), 200
+        myFamily.delete_member(id)
+        return jsonify({}), 200
 
     if request.method == 'PUT':
-        body = request.get_json()
-        respuesta = myFamily.update_member(member_id, body)
-        return jsonify(respuesta), 200
+        member = request.get_json()
+        member = myFamily.update_member(id, member)
+        return jsonify(member), 200
 
 
 
